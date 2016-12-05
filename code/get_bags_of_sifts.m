@@ -69,7 +69,7 @@ vocab_t = vocab';
 for i=1:N
     img = imread(image_paths{i,1});
     hist = zeros(1,vocab_size);
-    [locations, SIFT_features] = vl_dsift(single(img), 'step',10); 
+    [locations, SIFT_features] = vl_dsift(single(img), 'step',5); 
     D = vl_alldist2(single(SIFT_features),vocab_t); 
     %build feature histogram
     m = size(SIFT_features,2);

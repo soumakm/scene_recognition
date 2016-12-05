@@ -58,7 +58,7 @@ vocab = zeros(vocab_size,128);
 X = 0;
 for i=1:N
     img = imread(image_paths{i,1});
-    [locations, SIFT_features] = vl_dsift(single(img), 'step',50); 
+    [locations, SIFT_features] = vl_dsift(single(img), 'step',25); 
     if X == 0
         X = SIFT_features;
     else    

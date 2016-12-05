@@ -19,8 +19,8 @@ clear vars;
 FEATURE = 'bag of sift';
 %FEATURE = 'placeholder';
 
-CLASSIFIER = 'nearest neighbor';
-% CLASSIFIER = 'support vector machine';
+%CLASSIFIER = 'nearest neighbor';
+CLASSIFIER = 'support vector machine';
 %CLASSIFIER = 'placeholder';
 
 % set up paths to VLFeat functions. 
@@ -76,7 +76,7 @@ switch lower(FEATURE)
         % YOU CODE build_vocabulary.m
         if ~exist('vocab.mat', 'file')
             fprintf('No existing visual word vocabulary found. Computing one from training images\n')
-            vocab_size = 200; %Larger values will work better (to a point) but be slower to compute
+            vocab_size = 500; %Larger values will work better (to a point) but be slower to compute
             vocab = build_vocabulary(train_image_paths, vocab_size);
             save('vocab.mat', 'vocab')
         end
