@@ -19,13 +19,13 @@ opts.batchSize = 50 ;
 % opts.learningRate is a critical parameter that can dramatically affect
 % whether training succeeds or fails. For most of the experiments in this
 % project the default learning rate is safe.
-opts.learningRate = 0.0001 ;
+opts.learningRate = 0.00005 ;
 %opts.learningRate = logspace(-3, -5, 120);
 
 % opts.numEpochs is the number of epochs. If you experiment with more
 % complex networks you might need to increase this. Likewise if you add
 % regularization that slows training.
- opts.numEpochs = 100 ;
+ opts.numEpochs = 500 ;
 
 % An example of learning rate decay as an alternative to the fixed learning
 % rate used by default. This isn't necessary but can lead to better
@@ -41,7 +41,7 @@ opts.learningRate = 0.0001 ;
 opts.continue = false ;
 
 %GPU support is off by default.
-% opts.gpus = [] ;
+% opts.gpus = [1] ;
 
 % --------------------------------------------------------------------
 %                                                         Prepare data
@@ -63,7 +63,7 @@ net = proj6_part1_cnn_init();
    imdb = load(imdb_filename) ;
  else
   imdb = proj6_part1_setup_data();
-   save(imdb_filename, '-struct', 'imdb') ;
+  save(imdb_filename, '-struct', 'imdb') ;
  end
 
 
@@ -99,7 +99,7 @@ labels = imdb.images.labels(1,batch) ;
 
 % Add jittering here before returning im
 n = length(batch)/2;
-mirror = randi(2*n,1,n);
+mirror = randi(length(batch),1,n);
 
 im(:,:,:,mirror) = fliplr(im(:,:,:,mirror));
 

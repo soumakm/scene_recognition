@@ -22,17 +22,16 @@ function imdb = proj6_part2_setup_data(averageImage)
 % VGG-F expects input images to be normalized by subtracting the average
 % image, just like in Part 1. VGG-F provides a 224x224x3 average image in
 % net.normalization.averageImage.
-
 SceneJPGsPath = '../data/';
 
 num_train_per_category = 100;
 num_test_per_category  = 100; %can be up to 110
 total_images = 15*num_train_per_category + 15 * num_test_per_category;
 
-image_size = [64 64]; %downsampling data for speed and because it hurts
+image_size = [224 224]; %downsampling data for speed and because it hurts
 % accuracy surprisingly little
 
-imdb.images.data   = zeros(image_size(1), image_size(2), 1, total_images, 'single');
+imdb.images.data   = zeros(image_size(1), image_size(2), 3, total_images, 'single');
 imdb.images.labels = zeros(1, total_images, 'single');
 imdb.images.set    = zeros(1, total_images, 'uint8');
 image_counter = 1;
@@ -48,7 +47,7 @@ sets = {'train', 'test'};
 %          num_train_per_category, num_test_per_category)
 %fprintf('Each image will be resized to %d by %d\n', image_size(1),image_size(2));
 
-%Read each image and resize it to 224x224
+%Read each image and resize it to 64x64
 for set = 1:length(sets)
     for category = 1:length(categories)
         cur_path = fullfile( SceneJPGsPath, sets{set}, categories{category});
@@ -82,5 +81,10 @@ for set = 1:length(sets)
         end
     end
 end
-
-
+%mean_img = mean(imdb.images.data(:,:,1,:),4);
+for i=1:image_counter-1
+    im = imdb.images.data(:,:,1,i);    
+    im = cat(3, im, im, im);
+    im = im - averageImage;
+    imdb.images.data(:,:,:,i) = im;
+end    

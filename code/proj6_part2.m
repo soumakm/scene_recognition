@@ -2,7 +2,7 @@ function [net, info] = proj6_part2()
 %code for Computer Vision, Georgia Tech by James Hays
 %based off the MNIST example from MatConvNet
 clear vars;
-run('~/../../matconvnet-1.0-beta16/matlab/vl_setupnn.m') ;
+run('../../../../../matconvnet-1.0-beta16/matlab/vl_setupnn.m') ;
 
 %It might actually be problematic to run vl_setup, because VLFeat has a
 %version of vl_argparse that conflicts with the matconvnet version. You
@@ -24,7 +24,7 @@ opts.learningRate = 0.0001 ;
 % opts.numEpochs is the number of epochs. If you experiment with more
 % complex networks you might need to increase this. Likewise if you add
 % regularization that slows training.
-opts.numEpochs = 90 ;
+opts.numEpochs = 5 ;
 
 % An example of learning rate decay as an alternative to the fixed learning
 % rate used by default. This isn't necessary but can lead to better
@@ -40,7 +40,7 @@ opts.numEpochs = 90 ;
 opts.continue = false ;
 
 %GPU support is off by default.
-% opts.gpus = [] ;
+%opts.gpus = [1] ;
 
 % This option lets you control how many of the layers are fine-tuned.
 % opts.backPropDepth = 2; %just retrain the last real layer (1 is softmax)
@@ -53,13 +53,13 @@ opts.continue = false ;
 
 net = proj6_part2_cnn_init();
 
-% if exist(opts.imdbPath, 'file')
-%   imdb = load(opts.imdbPath) ;
-% else
+imdb_filename = 'imdb2.mat';
+if exist(imdb_filename, 'file')
+  imdb = load(imdb_filename) ;
+else
   imdb = proj6_part2_setup_data(net.normalization.averageImage);
-%   mkdir(opts.expDir) ;
-%   save(opts.imdbPath, '-struct', 'imdb') ;
-% end
+  save(imdb_filename, '-struct', 'imdb') ;
+end
 
 
 
@@ -70,6 +70,7 @@ net = proj6_part2_cnn_init();
 [net, info] = cnn_train(net, imdb, @getBatch, ...
     opts, ...
     'val', find(imdb.images.set == 2)) ;
+fprintf('Lowest validation erorr is %f\n',min(info.val.error(1,:)))
 
 end
 
@@ -92,6 +93,9 @@ im = imdb.images.data(:,:,:,batch) ;
 labels = imdb.images.labels(1,batch) ;
 
 % Add jittering here before returning im
+n = length(batch)/2;
+mirror = randi(length(batch),1,n);
 
+im(:,:,:,mirror) = fliplr(im(:,:,:,mirror));
 
 end
